@@ -6,3 +6,18 @@ livekit-plugins-cartesia~=1.0
 livekit-plugins-openai~=1.0
 livekit-api>=1.0.7
 python-dotenv
+
+# Core runtime libraries used by the agent code
+aiohttp
+torch>=2.1
+numpy
+pyvts
+
+# TTS backend dependencies (required by faster-qwen3-tts local package)
+soundfile
+qwen-tts>=0.1.1
+transformers>=4.57
+huggingface-hub
+
+# Install the local faster-qwen3-tts package (editable)
+-e ./lib/faster-qwen3-tts
