@@ -89,7 +89,7 @@ Remember: You aren't just a bot—you're a lively, mischievous presence in the m
 """
 
 # ─── VTube Controller ────────────────────────────────────────────────
-from vtube_controller import VTUBE
+# vtube_controller already imported above; no need to re-import
 
 # ─── Configuration ───────────────────────────────────────────────────
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
@@ -163,23 +163,23 @@ async def voice_session(ctx: agents.JobContext):
     """Called when a user connects to the LiveKit room."""
     logger.info(f"User connected: {ctx.room.name}")
     
-    vtube_connected = await VTUBE.connect()
-    if vtube_connected:
+    # connect once and log status
+    if await VTUBE.connect():
         logger.info("VTube Studio connected")
 
     stt_plugin = deepgram.STT(
-        model="nova-3", 
-        language="multi",
-        detect_language=False,
-        smart_format=True,
-        interim_results=True,
-        api_key=DEEPGRAM_KEY,
-        keyterm=[
-            "moshi", "desu", "konnichiwa",
-            "nihongo", "arigato", "sugoi",
-            "hello", "hey", "AURA"
-        ]
-    )
+    model="nova-3", 
+    language="multi",
+    detect_language=False,
+    smart_format=True,
+    interim_results=True,
+    api_key=DEEPGRAM_KEY,
+    keyterm=[
+        "moshi", "desu", "konnichiwa",
+        "nihongo", "arigato", "sugoi",
+        "hello", "hey", "AURA"
+    ]
+)
     
     llm_plugin = openai.LLM(
         model=os.getenv("OPENROUTER_MODEL", OPENROUTER_MODEL),
@@ -198,22 +198,23 @@ async def voice_session(ctx: agents.JobContext):
     )
 
     await session.start(
-        room=ctx.room,
-        agent=AURAAssistant(),
-        room_options=room_io.RoomOptions(
-            audio_input=room_io.AudioInputOptions(
-                noise_cancellation=lambda params: (
-                    noise_cancellation.BVCTelephony()
-                    if params.participant.kind == rtc.ParticipantKind.PARTICIPANT_KIND_SIP
-                    else noise_cancellation.BVC()
-                ),
+    room=ctx.room,
+    agent=AURAAssistant(),
+    room_options=room_io.RoomOptions(
+        audio_input=room_io.AudioInputOptions(
+            sample_rate=16000,
+            num_channels=1,
+            noise_cancellation=lambda params: (
+                noise_cancellation.BVCTelephony()
+                if params.participant.kind == rtc.ParticipantKind.PARTICIPANT_KIND_SIP
+                else noise_cancellation.BVC()
             ),
         ),
-    )
+    ),
+)
 
-    # Greet with happy expression
-    vtube_connected = VTUBE.connected
-    if vtube_connected:
+    # Greet with happy expression if the studio is already connected
+    if VTUBE.connected:
         await VTUBE.set_expression("happy")
 
     await session.generate_reply(
@@ -239,12 +240,9 @@ class AURAAssistant(Agent):
     
     async def llm_chat(self, chat_ctx, **kwargs):
         """Override to detect emotion and trigger expressions"""
-        # Get response from parent
+        # simply proxy to parent; emotion detection lives in aura_tts
         async for chunk in super().llm_chat(chat_ctx, **kwargs):
             yield chunk
-        
-        # Emotion detection is now handled per-sentence in aura_tts.py
-        pass
 
 
 if __name__ == "__main__":

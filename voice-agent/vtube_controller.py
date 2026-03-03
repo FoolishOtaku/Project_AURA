@@ -24,6 +24,8 @@ class VTubeController:
         self.vts = None
         self.is_enabled = os.getenv("VTUBE_ENABLED", "false").lower() == "true"
         self._connected_loop = None  # Track which event loop owns the VTS connection
+        # connection state flag (not to be confused with pyvts internal state)
+        self.connected = False
         
         if not self.is_enabled:
             logger.info("VTube Studio integration is DISABLED via .env")
@@ -295,7 +297,11 @@ class VTubeController:
         """Bilingual detection: Looks for explicit tags [tag1, tag2] first, then falls back to keywords."""
         if not self.is_enabled:
             return []
-            
+
+        if not text or not isinstance(text, str):
+            # nothing to detect
+            return []
+
         text_lower = text.lower()
         
         # 1. Look for explicit tags in brackets [happy, pupil_shrink]
