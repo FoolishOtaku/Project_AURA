@@ -1,23 +1,24 @@
 # AURA Voice Agent Dependencies
-livekit-agents[silero,turn-detector]~=1.3
-livekit-plugins-noise-cancellation~=0.2
-livekit-plugins-deepgram~=1.0
-livekit-plugins-cartesia~=1.0
-livekit-plugins-openai~=1.0
-livekit-api>=1.0.7
+
+livekit-agents[silero]==1.4.4
+livekit-plugins-noise-cancellation==0.2.5
+livekit-plugins-deepgram==1.4.4
+livekit-plugins-cartesia==1.4.4
+livekit-plugins-openai==1.4.4
+livekit-api==1.1.0
 python-dotenv
 
-# Core runtime libraries used by the agent code
+# Core runtime
 aiohttp
 torch>=2.1
 numpy
 pyvts
 
-# TTS backend dependencies (required by faster-qwen3-tts local package)
+# TTS backend
 soundfile
-qwen-tts>=0.1.1
-transformers>=4.57
+qwen-tts==0.1.1
+transformers==4.57.3
 huggingface-hub
 
-# Install the local faster-qwen3-tts package (editable)
+# Local TTS engine
 -e ./lib/faster-qwen3-tts
