@@ -24,10 +24,11 @@
 
 ### Step 1: Install Mandatory Tools
 Download and install these three tools (use default settings for all):
-1. **Node.js**: [Download here](https://nodejs.org/). (Choose "LTS" version). This runs the Dashboard.
-2. **Miniconda**: [Download here](https://docs.anaconda.com/miniconda/). This manages the AI models.
-3. **Git**: [Download here](https://git-scm.com/downloads). This downloads the project code.
-4. **VTube Studio (Optional)**: Available for free on Steam.
+1. **Python (3.12 Recommended)**: [Download 3.12 here](https://www.python.org/downloads/release/python-3128/). (Compatible with 3.10 - 3.12. **Note:** Python 3.13+ is currently NOT supported).
+2. **Node.js**: [Download here](https://nodejs.org/). (Choose "LTS" version). This runs the Dashboard.
+3. **Miniconda**: [Download here](https://docs.anaconda.com/miniconda/). This manages the AI models.
+4. **Git**: [Download here](https://git-scm.com/downloads). This downloads the project code.
+5. **VTube Studio (Optional)**: Available for free on Steam.
 
 ### Step 2: Get the Code
 Open your **Terminal** (Search for "PowerShell" on Windows) and type:
